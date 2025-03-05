@@ -64,6 +64,7 @@ spec:
       required:
         - token
         - useCases
+        - scmType
         - playbook
         - aapHostName
       properties:
@@ -86,7 +87,7 @@ spec:
                 url: https://github.com/ansible-collections/community.rhel_ops
                 version: main
               - name: network
-                url: https://github.com/redhat-cop/network.backup
+                url: https://gitlab.com/abhikdps1/network.backup
                 version: main
               - name: windows
                 url: https://github.com/redhat-cop/infra.windows_ops
@@ -101,6 +102,19 @@ spec:
               - Cloud
           uniqueItems: true
           ui:widget: checkboxes
+        scmType:
+          title: Source control option
+          type: string
+          description: Select the source control option for your Ansible project.
+          default: github.com
+          enum:
+            - github.com
+            - gitlab.com
+            - bitbucket.org
+          enumNames:
+            - 'GitHub'
+            - 'Gitlab'
+            - 'Bitbucket'
         playbook:
           title: Playbook
           description: Select playbook
