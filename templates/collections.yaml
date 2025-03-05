@@ -112,10 +112,8 @@ spec:
 
     - id: publish
       name: Publish
-      action: action: >-
-        {{#eq parameters.sourceControl "github.com"}}publish:github{{/eq}}
-        {{#eq parameters.sourceControl "gitlab.com"}}publish:gitlab{{/eq}}
-      # if: '{{ eq parameters.sourceControl "github.com" }}'
+      if: ${{ parameters.sourceControl == 'github.com' }}
+      action: publish:github
       input:
         allowedHosts:
           - ${{ parameters.sourceControl }}
@@ -124,17 +122,17 @@ spec:
         repoVisibility: 'public'
         defaultBranch: main
 
-    #- id: publish
-    #  name: Publish
-    #  action: publish:gitlab
-    #  if: '{{ eq parameters.sourceControl "gitlab.com" }}'
-    #  input:
-    #    allowedHosts:
-    #      - ${{ parameters.sourceControl }}
-    #    description: ${{ parameters.description }}
-    #    repoUrl: ${{ steps.ansible.output.repoUrl }}
-    #    repoVisibility: 'private'
-    #    defaultBranch: main
+    - id: publish
+      name: Publish
+      if: ${{ parameters.sourceControl == 'gitlab.com' }}
+      action: publish:gitlab
+      input:
+        allowedHosts:
+          - ${{ parameters.sourceControl }}
+        description: ${{ parameters.description }}
+        repoUrl: ${{ steps.ansible.output.repoUrl }}
+        repoVisibility: 'private'
+        defaultBranch: main
 
     - id: register
       name: Register
