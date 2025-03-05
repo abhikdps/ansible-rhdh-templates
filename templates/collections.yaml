@@ -112,7 +112,20 @@ spec:
 
     - id: publish
       name: Publish
+      action: publish:github
+      if: '{{ eq parameters.sourceControl "github" }}'
+      input:
+        allowedHosts:
+          - ${{ parameters.sourceControl }}
+        description: ${{ parameters.description }}
+        repoUrl: ${{ steps.ansible.output.repoUrl }}
+        repoVisibility: 'private'
+        defaultBranch: main
+
+    - id: publish
+      name: Publish
       action: publish:gitlab
+      if: '{{ eq parameters.sourceControl "gitlab" }}'
       input:
         allowedHosts:
           - ${{ parameters.sourceControl }}
