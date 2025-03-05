@@ -112,13 +112,13 @@ spec:
 
     - id: publish
       name: Publish
-      action: publish:github
+      action: publish:gitlab
       input:
         allowedHosts:
           - ${{ parameters.sourceControl }}
         description: ${{ parameters.description }}
         repoUrl: ${{ steps.ansible.output.repoUrl }}
-        repoVisibility: 'public'
+        repoVisibility: 'private'
         defaultBranch: main
 
     - id: register
