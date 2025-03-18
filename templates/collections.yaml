@@ -136,10 +136,18 @@ spec:
 
     - id: register
       name: Register
-      if: ${{ parameters.sourceControl == 'github.com' || parameters.sourceControl == 'gitlab.com' }}
+      if: ${{ parameters.sourceControl == 'github.com' }}
       action: catalog:register
       input:
-        repoContentsUrl: ${{ parameters.sourceControl == 'github.com' && steps.publish-github.output.repoContentsUrl || steps.publish-gitlab.output.repoContentsUrl }}
+        repoContentsUrl: ${{ steps.publish-github.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+    - id: register
+      name: Register catalog
+      if: ${{ parameters.sourceControl == 'gitlab.com' }}
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish-gitlab.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
 
   output:
