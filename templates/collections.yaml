@@ -153,19 +153,9 @@ spec:
   output:
     links:
       - title: Repository
-        if: ${{ parameters.sourceControl == 'github.com' }}
-        url: ${{ steps.publish_github.output.remoteUrl }}
-
-      - title: Repository
-        if: ${{ parameters.sourceControl == 'gitlab.com' }}
-        url: ${{ steps.publish_gitlab.output.remoteUrl }}
+        url: ${{ parameters.sourceControl == 'github.com' && steps.publish_github.output.remoteUrl || steps.publish_gitlab.output.remoteUrl }}
 
       - title: Open in catalog
         icon: catalog
         if: ${{ parameters.sourceControl == 'github.com' }}
         entityRef: ${{ steps.register_github.output.entityRef }}
-
-      - title: Open in catalog
-        icon: catalog
-        if: ${{ parameters.sourceControl == 'gitlab.com' }}
-        entityRef: ${{ steps.register_gitlab.output.entityRef }}
