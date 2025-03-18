@@ -112,8 +112,7 @@ spec:
 
     - id: publish_github
       name: Publish to Github
-      if: ${{ parameters.sourceControl == 'github.com' }}
-      action: publish:github
+      action: ${{ parameters.sourceControl == 'github.com' && 'publish:github' || 'publish:gitlab' }}
       input:
         allowedHosts:
           - ${{ parameters.sourceControl }}
@@ -122,17 +121,17 @@ spec:
         repoVisibility: 'public'
         defaultBranch: main
 
-    - id: publish_gitlab
-      name: Publish to Gitlab
-      if: ${{ parameters.sourceControl == 'gitlab.com' }}
-      action: publish:gitlab
-      input:
-        allowedHosts:
-          - ${{ parameters.sourceControl }}
-        description: ${{ parameters.description }}
-        repoUrl: ${{ steps.ansible.output.repoUrl }}
-        repoVisibility: 'private'
-        defaultBranch: main
+    # - id: publish_gitlab
+    #   name: Publish to Gitlab
+    #   if: ${{ parameters.sourceControl == 'gitlab.com' }}
+    #   action: publish:gitlab
+    #   input:
+    #     allowedHosts:
+    #       - ${{ parameters.sourceControl }}
+    #     description: ${{ parameters.description }}
+    #     repoUrl: ${{ steps.ansible.output.repoUrl }}
+    #     repoVisibility: 'private'
+    #     defaultBranch: main
 
     - id: register_github
       name: Register catalog from Github
@@ -142,25 +141,18 @@ spec:
         repoContentsUrl: ${{ steps.publish_github.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
 
-    - id: register_gitlab
-      name: Register catalog from Gitlab
-      if: ${{ parameters.sourceControl == 'gitlab.com' }}
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publish_gitlab.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
-
-    - id: set-output-links
-      name: Register Repository
-      action: debug:log
-      input:
-        repoUrl: ${{ parameters.sourceControl == 'github.com' && steps.publish_github.output.remoteUrl || steps.publish_gitlab.output.remoteUrl }}
-        entityRef: ${{ parameters.sourceControl == 'github.com' && steps.register_github.output.entityRef || steps.register_gitlab.output.entityRef }}
+    # - id: register_gitlab
+    #   name: Register catalog from Gitlab
+    #   if: ${{ parameters.sourceControl == 'gitlab.com' }}
+    #   action: catalog:register
+    #   input:
+    #     repoContentsUrl: ${{ steps.publish_gitlab.output.repoContentsUrl }}
+    #     catalogInfoPath: '/catalog-info.yaml'
 
   output:
     links:
       - title: Repository
-        url: ${{ steps.publish_github.output.remoteUrl || steps.publish_gitlab.output.remoteUrl }}
+        url: ${{ steps.publish_github.output.remoteUrl }}
 
       - title: Open in catalog
         icon: catalog
