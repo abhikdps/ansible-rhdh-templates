@@ -110,8 +110,8 @@ spec:
           sourceControl: ${{ parameters.sourceControl }}
           devSpacesBaseUrl: ${{ steps.ansible.output.devSpacesBaseUrl }}
 
-    - id: publish
-      name: Publish
+    - id: publish-github
+      name: Publish to Github
       if: ${{ parameters.sourceControl == 'github.com' }}
       action: publish:github
       input:
@@ -122,8 +122,8 @@ spec:
         repoVisibility: 'public'
         defaultBranch: main
 
-    - id: publish
-      name: Publish
+    - id: publish-gitlab
+      name: Publish to Gitlab
       if: ${{ parameters.sourceControl == 'gitlab.com' }}
       action: publish:gitlab
       input:

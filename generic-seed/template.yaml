@@ -94,7 +94,7 @@ spec:
                 url: https://github.com/ansible-collections/community.rhel_ops
                 version: main
               - name: network
-                url: https://github.com/redhat-cop/network.backup
+                url: https://gitlab.com/abhikdps1/network.backup
                 version: main
               - name: windows
                 url: https://github.com/redhat-cop/infra.windows_ops
