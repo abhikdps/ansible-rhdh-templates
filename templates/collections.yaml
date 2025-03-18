@@ -134,7 +134,7 @@ spec:
         repoVisibility: 'private'
         defaultBranch: main
 
-    - id: register-github
+    - id: register_github
       name: Register catalog from Github
       if: ${{ parameters.sourceControl == 'github.com' }}
       action: catalog:register
@@ -142,7 +142,7 @@ spec:
         repoContentsUrl: ${{ steps.publish_github.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
 
-    - id: register-gitlab
+    - id: register_gitlab
       name: Register catalog from Gitlab
       if: ${{ parameters.sourceControl == 'gitlab.com' }}
       action: catalog:register
@@ -161,5 +161,11 @@ spec:
         url: ${{ steps.publish_gitlab.output.remoteUrl }}
 
       - title: Open in catalog
+        if: ${{ parameters.sourceControl == 'github.com' }}
         icon: catalog
-        entityRef: ${{ steps.register.output.entityRef }}
+        entityRef: ${{ steps.register_github.output.entityRef }}
+
+      - title: Open in catalog
+        if: ${{ parameters.sourceControl == 'gitlab.com' }}
+        icon: catalog
+        entityRef: ${{ steps.register_gitlab.output.entityRef }}
