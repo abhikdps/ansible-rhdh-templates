@@ -150,6 +150,13 @@ spec:
         repoContentsUrl: ${{ steps.publish_gitlab.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
 
+    - id: set-output-links
+      name: Register Repository
+      action: debug:log
+      input:
+        repoUrl: ${{ parameters.sourceControl == 'github.com' && steps.publish_github.output.remoteUrl || steps.publish_gitlab.output.remoteUrl }}
+        entityRef: ${{ parameters.sourceControl == 'github.com' && steps.register_github.output.entityRef || steps.register_gitlab.output.entityRef }}
+
   output:
     links:
       - title: Repository
