@@ -112,7 +112,8 @@ spec:
 
     - id: publish_github
       name: Publish to Github
-      action: ${{ parameters.sourceControl == 'github.com' && 'publish:github' || 'publish:gitlab' }}
+      if: ${{ parameters.sourceControl == 'github.com' }}
+      action: publish:github
       input:
         allowedHosts:
           - ${{ parameters.sourceControl }}
@@ -121,24 +122,23 @@ spec:
         repoVisibility: 'public'
         defaultBranch: main
 
-    # - id: publish_gitlab
-    #   name: Publish to Gitlab
-    #   if: ${{ parameters.sourceControl == 'gitlab.com' }}
-    #   action: publish:gitlab
-    #   input:
-    #     allowedHosts:
-    #       - ${{ parameters.sourceControl }}
-    #     description: ${{ parameters.description }}
-    #     repoUrl: ${{ steps.ansible.output.repoUrl }}
-    #     repoVisibility: 'private'
-    #     defaultBranch: main
+    - id: publish_gitlab
+      name: Publish to Gitlab
+      if: ${{ parameters.sourceControl == 'gitlab.com' }}
+      action: publish:gitlab
+      input:
+        allowedHosts:
+          - ${{ parameters.sourceControl }}
+        description: ${{ parameters.description }}
+        repoUrl: ${{ steps.ansible.output.repoUrl }}
+        repoVisibility: 'private'
+        defaultBranch: main
 
-    - id: register_github
-      name: Register catalog from Github
-      if: ${{ parameters.sourceControl == 'github.com' }}
+    - id: register
+      name: Register
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publish_github.output.repoContentsUrl }}
+        repoContentsUrl: ${{ steps.publish_github.output.repoContentsUrl if parameters.sourceControl == 'github.com' else steps.publish_gitlab.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
 
     # - id: register_gitlab
@@ -152,9 +152,8 @@ spec:
   output:
     links:
       - title: Repository
-        url: ${{ steps.publish_github.output.remoteUrl }}
+        url: ${{ steps.publish_github.output.remoteUrl if parameters.sourceControl == 'github.com' else steps.publish_gitlab.output.remoteUrl }}
 
       - title: Open in catalog
         icon: catalog
-        if: ${{ parameters.sourceControl == 'github.com' }}
-        entityRef: ${{ steps.register_github.output.entityRef }}
+        entityRef: ${{ steps.register.output.entityRef }}
