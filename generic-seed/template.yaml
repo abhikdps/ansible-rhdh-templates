@@ -53,13 +53,18 @@ spec:
           default:
             id: 1
             name: Default
+        credentials:
+          title: Credentials
+          description: Select SCM credential for Private repositories
+          resource: credentials
+          ui:field: AAPResourcePicker
         scmUrl:
           title: Source control URL
           type: string
           ui:help: 'Source control URL: gitSourceControlUrlHelp'
           ui:options:
             rows: 5
-          default: https://github.com/ansible/ansible-pattern-loader
+          default: https://github.com/abhikdps/pattern-loader
         scmBranch:
           title: Source control branch/tag/commit
           type: string
@@ -90,17 +95,21 @@ spec:
           items:
             type: object
             enum:
+              # github public
               - name: rhel
                 url: https://github.com/ansible-collections/community.rhel_ops
                 version: main
-              - name: network
-                url: https://github.com/redhat-cop/network.backup
-                version: main
+              # github private
               - name: windows
-                url: https://github.com/redhat-cop/infra.windows_ops
+                url: https://github.com/abhikdps/infra-windows_ops
                 version: main
+              # gitlab public
               - name: cloud
-                url: https://github.com/redhat-cop/cloud.aws_ops
+                url: https://gitlab.com/abhikdps1/cloud.aws_ops
+                version: main
+              # gitlab private
+              - name: network
+                url: https://gitlab.com/abhikdps1/network.backup
                 version: main
             enumNames:
               - Rhel
@@ -140,6 +149,7 @@ spec:
             scmUrl: ${{ parameters.scmUrl }}
             scmBranch: ${{ parameters.scmBranch }}
             scmUpdateOnLaunch: true
+            credentials: ${{ parameters.credentials }}
      - id: create-ee
        name: Create execution environment
        action: rhaap:create-execution-environment
@@ -160,17 +170,20 @@ spec:
          values:
            templateName: 'RH AAP Demo Seed Job Template'
            templateDescription: 'RH AAP Demo Seed Job Template'
+           scmType: ${{ parameters.scmType }}
            project: ${{steps['create-project'].output.project }}
            organization: ${{ parameters.organization }}
            jobInventory: ${{ parameters.jobInventory }}
            playbook: ${{ parameters.playbook }}
            executionEnvironment: ${{steps['create-ee'].output.executionEnvironment }}
+           credentials: ${{ parameters.credentials }}
            extraVariables:
              aap_hostname: ${{ parameters.aapHostName }}
              aap_token: ${{ parameters.token }}
              usecases: ${{ parameters.useCases }}
              seed_usecase: ${{ parameters.useCases | useCaseNameFilter }}
              organization: ${{ parameters.organization | resourceFilter('name')}}
+             credential: ${{ parameters.credentials | resourceFilter('name')}}
      - id: launch-job
        name: Launch job template
        action: rhaap:launch-job-template
