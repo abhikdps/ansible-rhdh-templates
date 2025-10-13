@@ -30,9 +30,6 @@ spec:
             Enter your access token for secure authentication.
           ui:field: AAPTokenField
           ui:widget: password
-          ui:backstage:
-            review:
-              show: false
           ui:options:
             hidden: true
         categories:
