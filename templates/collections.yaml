@@ -11,7 +11,7 @@ metadata:
 spec:
   owner: ansible-authors
   system: ansible
-  type: service
+  type: collection
   parameters:
     - title: Provide information about the new component
       required:
