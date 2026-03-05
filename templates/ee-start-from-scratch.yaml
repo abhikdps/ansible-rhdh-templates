@@ -281,10 +281,8 @@ spec:
                   title: Select source control provider
                   description: Choose your source control provider
                   type: string
-                  enum:
-                    - Github
-                    - Gitlab
                   ui:
+                    field: SCMResourcePicker
                     component: select
                     help: Select the source control provider to publish the EE definition files to.
                 repositoryOwner:
