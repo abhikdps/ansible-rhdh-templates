@@ -279,12 +279,12 @@ spec:
                   const: true
                 sourceControlProvider:
                   title: Select source control provider
-                  description: Choose your source control provider
-                  type: string
+                  # description: Choose your source control provider
+                  # type: string
                   ui:
                     field: SCMResourcePicker
-                    component: select
-                    help: Select the source control provider to publish the EE definition files to.
+                    # component: select
+                    # help: Select the source control provider to publish the EE definition files to.
                 repositoryOwner:
                   title: Git repository organization or username
                   type: string
